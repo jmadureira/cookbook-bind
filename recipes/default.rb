@@ -88,7 +88,11 @@ end
 
 # Include zones from external source if set.
 if !node['bind']['zonesource'].nil?
-  include_recipe "bind::#{node['bind']['zonesource']}2zone"
+  if node['bind']['zonesource'].include? '::'
+    include_recipe node['bind']['zonesource']
+  else
+    include_recipe "bind::#{node['bind']['zonesource']}2zone"
+  end
 else
   Chef::Log.warn('No zonesource defined, assuming zone names are defined as override attributes.')
 end
